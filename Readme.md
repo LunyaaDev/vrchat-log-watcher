@@ -38,6 +38,22 @@ log.on('debug', (data) => {
 })
 ```
 
+## Events
+
+| event | description |
+| --- | --- | 
+| raw | All VRChat logs without any parsing | 
+| data | all debug / warning / error events | 
+| debug | debug events | 
+| warning | warning events | 
+| err | error events | 
+| stringLoad | stringLoad events | 
+| imageLoad | imageLoad events | 
+| join | join instance | 
+| leave | leave instance | 
+| playerJoined | player joined instance | 
+| playerLeft | player left instance | 
+
 ## Log Format & Parsing
 
 Example log message:
@@ -56,13 +72,6 @@ resolves to:
 ```
 topic and content might not be set depending on the log message
 
-
-# Planned features
-- Parse more specific events like:
-  - World join / leave
-  - Player join / leave
-  - String / Image loading
-  - ...
 
 ## Contributing
 Pull requests are welcome! If you have any ideas, feel free to open an issue.
