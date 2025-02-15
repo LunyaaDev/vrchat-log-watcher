@@ -7,6 +7,10 @@ import {
   VrchatLogWatcherEventData,
   VrchatLogWatcherEventDataWithTopic,
 } from './interfaces/VrchatLogWatcherEventData'
+import {
+  Instance as VrchatInstance,
+  parseLocation,
+} from 'vrchat-location-parser'
 
 export * from './interfaces/VrchatLogWatcherEventData'
 
@@ -21,6 +25,10 @@ export interface VrchatLogWatcherEvents {
   err: (data: VrchatLogWatcherEventData) => void
   stringLoad: (data: VrchatLogWatcherEventData & { url: string }) => void
   imageLoad: (data: VrchatLogWatcherEventData & { url: string }) => void
+  join: (
+    data: VrchatLogWatcherEventData & { instance: null | VrchatInstance },
+  ) => void
+  leave: (data: VrchatLogWatcherEventData) => void
 }
 
 export class VrchatLogWatcher extends EventEmitter {
@@ -228,6 +236,30 @@ export class VrchatLogWatcher extends EventEmitter {
         })
         return
       }
+    }
+    
+    // world join
+    if (
+      data.type == 'debug' &&
+      data.topic == 'Behaviour' &&
+      data.content.startsWith('Joining wrld_')
+    ) {
+      this.emit('join', {
+        ...data,
+        instance: parseLocation(data.content.substring('Joining '.length)),
+      })
+      return
+    }
+
+
+    // world leave
+    if (
+      data.type == 'debug' &&
+      data.topic == 'Behaviour' &&
+      data.content == 'Unloading scenes'
+    ) {
+      this.emit('leave', data)
+      return
     }
   }
 }
