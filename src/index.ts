@@ -29,6 +29,16 @@ export interface VrchatLogWatcherEvents {
     data: VrchatLogWatcherEventData & { instance: null | VrchatInstance },
   ) => void
   leave: (data: VrchatLogWatcherEventData) => void
+  playerJoined: (
+    data: VrchatLogWatcherEventData & {
+      user: { username: string; userId?: string }
+    },
+  ) => void
+  playerLeft: (
+    data: VrchatLogWatcherEventData & {
+      user: { username: string; userId?: string }
+    },
+  ) => void
 }
 
 export class VrchatLogWatcher extends EventEmitter {
@@ -237,7 +247,7 @@ export class VrchatLogWatcher extends EventEmitter {
         return
       }
     }
-    
+
     // world join
     if (
       data.type == 'debug' &&
@@ -251,7 +261,6 @@ export class VrchatLogWatcher extends EventEmitter {
       return
     }
 
-
     // world leave
     if (
       data.type == 'debug' &&
@@ -260,6 +269,45 @@ export class VrchatLogWatcher extends EventEmitter {
     ) {
       this.emit('leave', data)
       return
+    }
+
+    // player join / leave
+    if (
+      data.type == 'debug' &&
+      data.topic == 'Behaviour' &&
+      (data.content.startsWith('OnPlayerJoined ') ||
+        data.content.startsWith('OnPlayerLeft '))
+    ) {
+      // is join or leave event
+      const eventname = data.content.startsWith('OnPlayerJoined ')
+        ? 'playerJoined'
+        : 'playerLeft'
+
+      // find user infos in context
+      const regexRes = data.content.match(
+        /OnPlayer(Joined|Left) (?<username>[^(]+) (\((?<userId>[^)]+)\))?/,
+      )
+
+      if (regexRes?.groups?.username) {
+        // has user id
+        if (regexRes?.groups?.userId)
+          this.emit(eventname, {
+            ...data,
+            user: {
+              username: regexRes.groups.username,
+              userId: regexRes.groups.userId,
+            },
+          })
+        // has no user id
+        else
+          this.emit(eventname, {
+            ...data,
+            user: {
+              username: regexRes.groups.username,
+            },
+          })
+        return
+      }
     }
   }
 }
