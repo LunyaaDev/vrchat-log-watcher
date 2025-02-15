@@ -19,6 +19,8 @@ export interface VrchatLogWatcherEvents {
   debug: (data: VrchatLogWatcherEventData) => void
   warning: (data: VrchatLogWatcherEventData) => void
   err: (data: VrchatLogWatcherEventData) => void
+  stringLoad: (data: VrchatLogWatcherEventData & { url: string }) => void
+  imageLoad: (data: VrchatLogWatcherEventData & { url: string }) => void
 }
 
 export class VrchatLogWatcher extends EventEmitter {
@@ -27,7 +29,7 @@ export class VrchatLogWatcher extends EventEmitter {
     /^(?<date>\d{4}\.\d{2}\.\d{2} \d{2}\:\d{2}\:\d{2}) (?<type>[a-zA-Z]+) +-  (?<data>.*)$/
 
   // regex to parse data from a line
-  public static lineDataRegex = /^\[(?<topic>[a-zA-Z0-9]+)\] (?<content>.*)$/
+  public static lineDataRegex = /^\[(?<topic>[a-zA-Z0-9 ]+)\] (?<content>.*)$/
 
   private vrchatLogDir: string
   private currentLogFile: null | string = null
@@ -191,9 +193,41 @@ export class VrchatLogWatcher extends EventEmitter {
 
       this.emit('data', dataWithTopic)
       this.emit(data.type, dataWithTopic)
+      this.parseSpecialEvents(dataWithTopic)
       return
     }
     this.emit('data', data)
     this.emit(data.type, data)
+    this.parseSpecialEvents(data)
+  }
+
+  /**
+   * parse spechial events and emit the corresponding trigger
+   * @param data parsed watcher event data
+   * @returns
+   */
+  private parseSpecialEvents = (data: VrchatLogWatcherEventData) => {
+    // String Download / Image Download
+    if (
+      data.type == 'debug' &&
+      (data.topic == 'String Download' || data.topic == 'Image Download')
+    ) {
+      // find url in content
+      const regexRes = data.content.match(
+        /Attempting to load (image|String) from URL '(?<url>[^']+)'/,
+      )
+
+      // if url found emit event
+      if (regexRes && regexRes.groups && regexRes.groups.url) {
+        const eventname =
+          data.topic == 'String Download' ? 'stringLoad' : 'imageLoad'
+
+        this.emit(eventname, {
+          ...data,
+          url: regexRes.groups.url,
+        })
+        return
+      }
+    }
   }
 }
