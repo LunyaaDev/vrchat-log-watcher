@@ -1,6 +1,6 @@
 {
   "name": "vrchat-log-watcher",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Tool to watch and parse VRChat log files in realtime",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
