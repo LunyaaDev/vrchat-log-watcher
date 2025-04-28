@@ -1,4 +1,4 @@
-import { VrchatLogWatcher } from "vrchat-log-watcher"
+import { VrchatLogWatcher } from 'vrchat-log-watcher'
 
 const log = new VrchatLogWatcher()
 
@@ -7,7 +7,6 @@ const log = new VrchatLogWatcher()
 
 // // log all debug messages
 // log.on('debug', console.log)
-
 
 // // log all debug messages with the topic API
 // log.on('debug', (data) => {

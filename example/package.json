@@ -13,6 +13,6 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "vrchat-log-watcher": "file:.."
+    "vrchat-log-watcher": "link:.."
   }
 }
