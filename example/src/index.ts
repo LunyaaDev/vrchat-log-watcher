@@ -1,3 +1,4 @@
+import { homedir } from 'os'
 import { VrchatLogWatcher } from 'vrchat-log-watcher'
 
 const log = new VrchatLogWatcher()

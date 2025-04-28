@@ -11,6 +11,8 @@ import {
   Instance as VrchatInstance,
   parseLocation,
 } from 'vrchat-location-parser'
+import { getVrchatLogDir } from './utils/getVrchatLogDir'
+import { getLatestLogfile, isVrchatLogFile } from './utils/getLatestLogfile'
 
 export * from './interfaces/VrchatLogWatcherEventData'
 
@@ -79,16 +81,9 @@ export class VrchatLogWatcher extends EventEmitter {
 
   constructor() {
     super()
-    this.vrchatLogDir = path.join(
-      os.homedir(),
-      'Appdata',
-      'LocalLow',
-      'VRChat',
-      'VRChat',
-    )
-
+    this.vrchatLogDir = getVrchatLogDir()
     // start logging on init
-    this.currentLogFile = this.getLatestLogfile()
+    this.currentLogFile = getLatestLogfile(this.vrchatLogDir)
     this.watchFile()
 
     // watch new files in the loggin folder
@@ -98,10 +93,10 @@ export class VrchatLogWatcher extends EventEmitter {
         return
       }
       // is vrchat logfile
-      if (!this.isVrchatLogFile(filename)) {
+      if (!isVrchatLogFile(filename)) {
         return
       }
-      const newLogFile = this.getLatestLogfile()
+      const newLogFile = getLatestLogfile(this.vrchatLogDir)
       // is same logfile that current
       if (newLogFile === this.currentLogFile) {
         return
@@ -109,34 +104,6 @@ export class VrchatLogWatcher extends EventEmitter {
       this.currentLogFile = newLogFile
       this.watchFile()
     })
-  }
-
-  /**
-   * check whether the filename could be a vrchat file
-   * @param filename filename of a file
-   * @returns whether the file could be a vrchat log file.
-   */
-  private isVrchatLogFile = (filename: string) =>
-    filename.startsWith('output_log_')
-
-  /**
-   * get the latest log file path from vrchat folder
-   * @returns the latest logfile path if found
-   */
-  private getLatestLogfile = () => {
-    const logFiles = fs
-      .readdirSync(this.vrchatLogDir)
-      .filter((x) => this.isVrchatLogFile(x))
-      .map((x) => ({
-        filename: x,
-        createdAt: fs.statSync(path.join(this.vrchatLogDir, x)).ctime.getTime(),
-      }))
-      .sort((a, b) => b.createdAt - a.createdAt)
-
-    if (logFiles.length === 0) {
-      return null
-    }
-    return path.join(this.vrchatLogDir, logFiles[0].filename)
   }
 
   /**
@@ -159,6 +126,9 @@ export class VrchatLogWatcher extends EventEmitter {
     this.tail.on('line', (data) => {
       this.emit('raw', data)
       this.parseLine(data)
+    })
+    this.tail.on('error', (error) => {
+      this.tail?.unwatch()
     })
   }
 
