@@ -1,6 +1,6 @@
 {
   "name": "vrchat-log-watcher",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Tool to watch and parse VRChat log files in realtime",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -21,10 +21,10 @@
   "author": "lunyaa.dev",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^22.13.1",
+    "@types/node": "^25.2.3",
     "@types/tail": "^2.2.3",
-    "tsup": "^8.3.6",
-    "typescript": "^5.7.3"
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
   },
   "repository": {
     "type": "git",
@@ -32,6 +32,6 @@
   },
   "dependencies": {
     "tail": "^2.2.6",
-    "vrchat-location-parser": "^0.1.2"
+    "vrchat-location-parser": "^0.2.0"
   }
 }
