@@ -5,6 +5,7 @@
     "declaration": true,
     "module": "nodenext",
     "moduleResolution": "nodenext",
+    "types": ["node"],
     "target": "ESNext",
     "strict": true
   },
