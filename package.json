@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "tail": "^2.2.6",
+    "vdf-parser": "^1.2.1",
     "vrchat-location-parser": "^0.2.0"
   }
 }
