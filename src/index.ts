@@ -81,7 +81,13 @@ export class VrchatLogWatcher extends EventEmitter {
 
   constructor() {
     super()
-    this.vrchatLogDir = getVrchatLogDir()
+
+    const logdir = getVrchatLogDir()
+    // throw error when log dir is missing
+    if (!logdir) {
+      throw Error('VRChat log dir missing')
+    }
+    this.vrchatLogDir = logdir
     // start logging on init
     this.currentLogFile = getLatestLogfile(this.vrchatLogDir)
     this.watchFile()

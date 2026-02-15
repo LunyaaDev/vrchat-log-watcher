@@ -11,6 +11,9 @@ importers:
       tail:
         specifier: ^2.2.6
         version: 2.2.6
+      vdf-parser:
+        specifier: ^1.2.1
+        version: 1.2.1
       vrchat-location-parser:
         specifier: ^0.2.0
         version: 0.2.0
@@ -553,6 +556,9 @@ packages:
   undici-types@7.16.0:
     resolution: {integrity: sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==}
 
+  vdf-parser@1.2.1:
+    resolution: {integrity: sha512-g5c73LP8NSebruEiVjOpV6KlN6xgVXBXc5UbexHWzjkatLJR++gUBhg76YqfJ9j4ZLfZ+Hv00592uiDywR+dWg==}
+
   vrchat-location-parser@0.2.0:
     resolution: {integrity: sha512-wQTnayxitCE8SLMicQIRXf8tFJB5XbnX0UzgLzLRownZqT4i6OFVuamBFLJRM7iAdkIoy/5w/wQtrLBqHj8hFQ==}
 
@@ -947,5 +953,7 @@ snapshots:
   ufo@1.6.3: {}
 
   undici-types@7.16.0: {}
+
+  vdf-parser@1.2.1: {}
 
   vrchat-location-parser@0.2.0: {}
