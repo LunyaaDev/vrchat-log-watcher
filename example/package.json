@@ -8,10 +8,10 @@
   },
   "keywords": [],
   "devDependencies": {
-    "@types/node": "^22.13.1",
-    "nodemon": "^3.1.9",
+    "@types/node": "^25.3.3",
+    "nodemon": "^3.1.14",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "vrchat-log-watcher": "link:.."
